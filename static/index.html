@@ -1,0 +1,267 @@
+<html>
+<head>
+	<title>WhoAmI</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<style>
+		body {
+			background-color: rgb(250, 249, 240);
+			font-family: Arial;
+			text-align: center;
+		}
+
+		.material-icons.md-18 { font-size: 18px; }
+
+	    .title {
+	       font-weight: bold;
+	       font-size: 35;
+	       user-select: none;
+	       margin: 30 auto;
+	    }
+	    
+	    .button {
+	        width: 200px;
+	        padding: 15 0;
+	        margin: 10 auto;
+	        outline: none;
+	        user-select: none;
+	        border: none;
+	        border-radius: 3px;
+	        transition: .2s;
+	        cursor: pointer;
+	        font-weight: bold;
+	    }
+
+	    #btn-create {
+	    	opacity: 1;
+	    	transition: opacity 1s; 
+	    }
+
+	    #btn-create:fade-out {
+	    	opacity: 0;
+	    }
+
+	    .code-input {
+	        width: 200px;
+	        padding: 15 0;
+	        margin: 10 auto;
+	        outline: none;
+	        border: none;
+	        text-align: center;
+	        border-radius: 3px;
+	        font-size: 25;
+	        font-weight: bold;
+	    }
+
+	    .code-block {
+	        width: 200px;
+	        padding: 15 0;
+	        margin: 10 auto;
+	        outline: none;
+	        border: none;
+	        border-radius: 3px;
+	        transition: .2s;
+	        font-weight: bold;
+	    }
+
+	    .code-output {
+	        display: inline-block;
+	        font-size: 25;
+	    }
+	    
+	    .cream {
+	        background-color: rgba(240, 240, 149, .6);
+	        /*color: rgb(19, 74, 13);*/
+	    }
+	    
+	    .cream:hover {
+	        background-color: rgba(240, 240, 149, 1);
+	    }
+	    
+	    .green {
+	        background-color: rgba(124, 252, 0, .6);
+	        color: rgb(19, 74, 13);
+	    }
+	    
+	    .green:hover {
+	        background-color: rgba(124, 252, 0, 1);
+	        color: rgb(19, 74, 13);
+	    }
+	    
+	    .warning {
+	        background-color: rgba(227, 132, 64, .6);
+	        transition: background-color 1s ease;
+	    }
+
+	    input::placeholder {
+			color: rgba(0, 0, 0, .2);
+			/*font-size: 20;*/
+			/*font-style: italic;*/
+		}
+
+	    .icon-copy {
+	    	user-select: none;
+	    	cursor:  pointer;
+	    	display: inline;
+	    	text-align: right;
+	    	position: relative;
+	    	left: 20px;
+	    }
+
+	    .table {
+	    	width: 50%;
+	    	margin: auto;
+	    }
+
+	    .header {
+	    	display: block;
+	    	padding:  5 10;
+	    	background-color: rgba(240, 240, 149, 1);
+	    	text-align: center;
+	    	font-size: 12pt;
+	    	font-weight: bold;
+	    }
+
+	    .row {
+	    	display: block;
+	    	padding:  5 10;
+	    	font-size: 12pt;
+	    	text-align: left;
+	    }
+
+	    .odd {
+	    	background-color: rgba(240, 240, 149, .5);
+	    }
+
+	    .even {
+	    	background-color: rgba(240, 240, 149, .2);
+	    }
+	    
+	</style>
+</head>
+<body>
+    <div style="width: 100%; height: 100%; display: table">
+        <div style="vertical-align: middle; display: table-cell">
+        	<div id="title" class="title">Katoya</div>
+        	<div id="block-create">
+        		<div id="btn-create" class="cream button" onClick="createRoom();">Create a room</div>
+        	</div>
+        	<hr id="line" style="display: block; height: 1px; border: none; margin: 40 auto; width: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .3), rgb(250, 249, 240));">
+        	<div id="block-join">
+        		<input id="code-input" class="cream code-input" type="text" placeholder="code"></input>
+        		<div id="btn-join" class="cream button" onClick="joinRoom();">Join room</div>
+        	</div>
+    	</div>
+	</div>
+<script>
+    function createRoom() {
+        
+    	but = document.getElementById('title');
+
+    	if (document.getElementById('codeBox') == null) {
+	    	codeBox = document.createElement('div');
+	    	codeBox.classList.add("cream");
+	    	codeBox.classList.add("code-block");
+	    	codeBox.id = "codeBox";
+	    	code = document.createElement('div');
+	    	code.classList.add("code-output");
+	    	code.innerHTML = Math.floor(Math.random() * 1000000);
+
+
+	    	iconCopy = document.createElement("div");
+	    	iconCopy.classList.add("icon-copy");
+	    	iconCopy.innerHTML = '<span class="material-icons md-18">content_copy</span>';
+	    	iconCopy.onclick = toClipboard;
+
+	    	codeBox.appendChild(code);
+	    	codeBox.appendChild(iconCopy);
+
+    		but.parentNode.insertBefore(codeBox, but.nextSibling);
+    		document.getElementById('block-create').remove();
+    		document.getElementById('block-join').remove();
+
+    		buildTable();
+    	}
+
+    	// fadeOut();
+    }
+
+    function toClipboard() {
+    	navigator.clipboard.writeText(code.textContent);
+    }
+
+    function fadeOut() {
+    	document.getElementById("btn-create").classList.toggle("fade-out");
+    }
+
+    function joinRoom() {
+    	codeInput = document.getElementById('code-input');
+
+    	if (codeInput.value == "") {
+    		codeInput.classList.remove("cream");
+    		codeInput.classList.add("warning");
+    	} else {
+    		title = document.getElementById('title');
+	    	codeBox = document.createElement('div');
+	    	codeBox.classList.add("cream");
+	    	codeBox.classList.add("code-block");
+	    	codeBox.id = "codeBox";
+	    	code = document.createElement('div');
+	    	code.classList.add("code-output");
+	    	code.innerHTML = codeInput.value;
+
+	    	iconCopy = document.createElement("div");
+	    	iconCopy.classList.add("icon-copy");
+	    	iconCopy.innerHTML = '<span class="material-icons md-18">content_copy</span>';
+	    	iconCopy.onclick = toClipboard;
+
+	    	codeBox.appendChild(code);
+	    	codeBox.appendChild(iconCopy);
+
+			title.parentNode.insertBefore(codeBox, title.nextSibling);
+			document.getElementById('block-create').remove();
+    		document.getElementById('block-join').remove();
+
+    		buildTable();
+    	}
+
+    }
+
+    function buildTable() {
+    	table = document.createElement('table');
+    	table.classList.add('table');
+
+    	line = document.getElementById('line');
+		line.parentNode.insertBefore(table, line.nextSibling);
+
+    	header = ['Name', 'Character'];
+    	data = [{'name': 'Pasha', 'character': 'Vanya'}, {'name': 'Vanya', 'character': 'Pasha'}];
+    	
+    	thead = table.createTHead();
+    	row = thead.insertRow();
+    	row.classList.add('header');
+    	for (element of header) {
+    		th = document.createElement('th');
+    		text = document.createTextNode(element);
+    		th.appendChild(text);
+    		row.appendChild(th);
+    	}
+
+    	for (element of data) {
+    		row = table.insertRow();
+    		row.classList.add('row');
+    		if (data.indexOf(element) % 2 == 0) {
+    			row.classList.add('even');
+    		} else {
+    			row.classList.add('odd');
+    		}
+    		for (key in element) {
+    			cell = row.insertCell();
+	    		text = document.createTextNode(element[key]);
+	    		cell.appendChild(text);
+    		}
+    	}
+    }
+
+</script>
+</body>
+</html>
